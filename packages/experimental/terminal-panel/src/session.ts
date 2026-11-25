@@ -12,7 +12,7 @@ import type {
 } from '@deepseek-ai/dsh-terminal'
 
 /** Refusal the model receives once the person has typed into an Agent terminal. */
-export const TAKEN_OVER = 'The user has taken over this terminal; read it with terminal_read or open a new terminal.'
+export const TAKEN_OVER = 'The user has taken over this terminal; read it with terminal_read or open a new terminal, and ask the user to return control from the terminal panel if you need to keep using it.'
 
 /** Refusal the model receives once the Session's sandbox policy differs from the one the terminal launched under. */
 export const POLICY_CHANGED = 'The session sandbox settings changed after this terminal opened, so it no longer accepts input; open a new terminal with terminal_open. You can still read, signal or close this one.'

@@ -368,6 +368,38 @@ describe('agent access', () => {
     expect(handle.write).not.toHaveBeenCalled()
   })
 
+  it('returns control to the agent after a take-over, and the next typed input takes it back', async () => {
+    const { terminal, handle } = fixture(agentInfo)
+    const view = await attach(terminal)
+    view.input.push({ type: 'write', sequence: 1, data: 'ls\r', typed: true })
+    expect(await readFrame(view.iterator)).toMatchObject({ type: 'state', info: { control: 'user', origin: 'agent' } })
+    expect(await readFrame(view.iterator)).toEqual({ type: 'ack', sequence: 1 })
+    await expect(terminal.agentWrite('pwd\r')).rejects.toMatchObject({ code: 'user-control' })
+    terminal.returnControl()
+    expect(terminal.info.control).toBe('agent')
+    expect(await readFrame(view.iterator)).toMatchObject({ type: 'state', info: { control: 'agent' } })
+    await terminal.agentWrite('pwd\r')
+    expect(handle.write).toHaveBeenLastCalledWith('pwd\r')
+    view.input.push({ type: 'write', sequence: 2, data: 'whoami\r', typed: true })
+    expect(await readFrame(view.iterator)).toMatchObject({ type: 'state', info: { control: 'user' } })
+    expect(await readFrame(view.iterator)).toEqual({ type: 'ack', sequence: 2 })
+    await expect(terminal.agentWrite('late\r')).rejects.toMatchObject({ code: 'user-control' })
+  })
+
+  it('never returns a terminal the person opened', () => {
+    const { terminal } = fixture()
+    expect(() => terminal.returnControl()).toThrow(expect.objectContaining({ code: 'unavailable' }))
+    expect(terminal.info.control).toBe('user')
+  })
+
+  it('refuses to return an agent terminal that is not running', async () => {
+    const { terminal, output, outcome } = fixture(agentInfo)
+    output.end()
+    outcome.resolve({ exitCode: 0, signal: null })
+    await expect.poll(() => terminal.info.state).toBe('exited')
+    expect(() => terminal.returnControl()).toThrow(expect.objectContaining({ code: 'not-running' }))
+  })
+
   it('renders pages and marked output once draining applies queued output', async () => {
     const { terminal, output } = fixture(agentInfo)
     output.write(Buffer.from('$ earlier\r\n'))

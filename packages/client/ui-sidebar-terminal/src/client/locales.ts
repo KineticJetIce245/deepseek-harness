@@ -23,10 +23,11 @@ export const zh = {
   attachmentEnded: '终端连接已结束，请重新连接。',
   invalidOutput: '终端画面传输异常，请重新连接。',
   terminalLimit: '终端数量已达上限，请关闭不用的终端后重试。已退出的终端也计入数量。',
-  'badge.agent': 'Agent', 'badge.agentHint': '由 Agent 打开。你一输入就由你接管，Agent 之后只能读取。',
+  'badge.agent': 'Agent', 'badge.agentHint': '由 Agent 打开。你一输入就由你接管，可随时点「交还」还给 Agent。',
   'badge.sandbox': '沙箱',
   'badge.readOnlyHint': '命令在 Agent 的只读沙箱里运行，包括你在这里输入的命令。',
   'badge.workspaceWriteHint': '命令在 Agent 的工作区沙箱里运行，包括你在这里输入的命令。',
+  handBack: '交还', handBackHint: '把输入控制交还给 Agent；你再按一次键就会立刻接管回来。',
 } satisfies Record<string, string>
 
 /** English terminal copy. */
@@ -45,10 +46,11 @@ export const en = {
   attachmentEnded: 'The terminal connection ended. Reconnect to continue.',
   invalidOutput: 'The terminal screen could not be received. Reconnect to recover it.',
   terminalLimit: 'The terminal limit has been reached. Close unused terminals and try again. Exited terminals also count toward the limit.',
-  'badge.agent': 'Agent', 'badge.agentHint': 'Opened by the agent. Typing here takes over; the agent can then only read it.',
+  'badge.agent': 'Agent', 'badge.agentHint': 'Opened by the agent. Typing here takes over; use Return to hand it back.',
   'badge.sandbox': 'Sandbox',
   'badge.readOnlyHint': "Commands run in the agent's read-only sandbox, including commands you type here.",
   'badge.workspaceWriteHint': "Commands run in the agent's workspace sandbox, including commands you type here.",
+  handBack: 'Return', handBackHint: 'Return input control to the agent; your next keystroke takes it back.',
 } satisfies Record<keyof typeof zh, string>
 
 /** Japanese copy, checked against the English keys. */
@@ -86,6 +88,8 @@ export const ja = {
   'badge.sandbox': 'サンドボックス',
   'badge.readOnlyHint': 'コマンドはエージェントの読み取り専用サンドボックスで実行されます（ここで入力したコマンドも含みます）。',
   'badge.workspaceWriteHint': 'コマンドはエージェントのワークスペースサンドボックスで実行されます（ここで入力したコマンドも含みます）。',
+  'handBack': '返す',
+  'handBackHint': '入力制御をエージェントに返します。次にキーを押すとすぐに引き継ぎます。',
 } satisfies Record<keyof typeof en, string>
 
 /** Spanish dictionary, checked against the English keys. */
@@ -108,6 +112,8 @@ export const es = {
   'badge.sandbox': 'Sandbox',
   'badge.readOnlyHint': 'Los comandos se ejecutan en el sandbox de solo lectura del agente, incluidos los que escriba aquí.',
   'badge.workspaceWriteHint': 'Los comandos se ejecutan en el sandbox del espacio de trabajo del agente, incluidos los que escriba aquí.',
+  'handBack': 'Devolver',
+  'handBackHint': 'Devuelve el control de entrada al agente; su siguiente pulsación lo recupera.',
 } satisfies Record<keyof typeof en, string>
 
 /** French dictionary, checked against the English keys. */
@@ -130,6 +136,8 @@ export const fr = {
   'badge.sandbox': 'Sandbox',
   'badge.readOnlyHint': 'Les commandes s’exécutent dans le sandbox en lecture seule de l’agent, y compris celles que vous saisissez ici.',
   'badge.workspaceWriteHint': 'Les commandes s’exécutent dans le sandbox de l’espace de travail de l’agent, y compris celles que vous saisissez ici.',
+  'handBack': 'Rendre',
+  'handBackHint': 'Rendre le contrôle de saisie à l’agent ; votre prochaine frappe le reprend.',
 } satisfies Record<keyof typeof en, string>
 
 /** German dictionary, checked against the English keys. */
@@ -152,6 +160,8 @@ export const de = {
   'badge.sandbox': 'Sandbox',
   'badge.readOnlyHint': 'Befehle laufen in der schreibgeschützten Sandbox des Agenten, auch Befehle, die Sie hier eingeben.',
   'badge.workspaceWriteHint': 'Befehle laufen in der Arbeitsbereich-Sandbox des Agenten, auch Befehle, die Sie hier eingeben.',
+  'handBack': 'Zurückgeben',
+  'handBackHint': 'Die Eingabekontrolle an den Agenten zurückgeben; Ihr nächster Tastendruck holt sie zurück.',
 } satisfies Record<keyof typeof en, string>
 
 /** Russian dictionary, checked against the English keys. */
@@ -174,6 +184,8 @@ export const ru = {
   'badge.sandbox': 'Песочница',
   'badge.readOnlyHint': 'Команды выполняются в песочнице агента только для чтения, включая команды, которые вы вводите здесь.',
   'badge.workspaceWriteHint': 'Команды выполняются в песочнице рабочей области агента, включая команды, которые вы вводите здесь.',
+  'handBack': 'Вернуть',
+  'handBackHint': 'Вернуть управление вводом агенту; следующее нажатие клавиши вернёт его вам.',
 } satisfies Record<keyof typeof en, string>
 
 /** Portuguese dictionary, checked against the English keys. */
@@ -196,4 +208,6 @@ export const pt = {
   'badge.sandbox': 'Sandbox',
   'badge.readOnlyHint': 'Os comandos são executados no sandbox somente leitura do agente, incluindo os que você digitar aqui.',
   'badge.workspaceWriteHint': 'Os comandos são executados no sandbox do espaço de trabalho do agente, incluindo os que você digitar aqui.',
+  'handBack': 'Devolver',
+  'handBackHint': 'Devolver o controle de entrada ao agente; a sua próxima tecla o recupera.',
 } satisfies Record<keyof typeof en, string>

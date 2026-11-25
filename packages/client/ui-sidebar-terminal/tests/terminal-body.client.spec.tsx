@@ -79,7 +79,8 @@ function mount(initial: TerminalViewState | undefined = idle, dictionary = en) {
   const detach = vi.fn()
   const model = {
     mount: vi.fn(() => detach), refresh: vi.fn(async () => {}),
-    rename: vi.fn(async () => {}), connect: vi.fn(), write: vi.fn(), resize: vi.fn(), acknowledge: vi.fn(),
+    rename: vi.fn(async () => {}), returnControl: vi.fn(async () => {}),
+    connect: vi.fn(), write: vi.fn(), resize: vi.fn(), acknowledge: vi.fn(),
   }
   const openTab = vi.fn()
   const tab = () => ({ tab: { id: 'tab', title: 'Terminal', visible, actions: { openTab } } })
@@ -364,7 +365,7 @@ it.each(titleSurfaces)('badges agent control in the $name and, after takeover, a
   expect(hint(en['badge.agent'])).toBe(`${en['badge.agentHint']} ${en['badge.workspaceWriteHint']}`)
   h.update({ ...idle, info: { ...agentInfo, control: 'user' } })
   title.rerender(chip())
-  expect(title.container.textContent).toBe(`${en['badge.sandbox']}bash`)
+  expect(title.container.textContent).toBe(`${en['badge.sandbox']}${en.handBack}bash`)
   expect(hint(en['badge.sandbox'])).toBe(en['badge.workspaceWriteHint'])
   h.update({ ...idle, info: { ...agentInfo, control: 'user', sandboxMode: 'read-only' } })
   title.rerender(chip())
@@ -374,7 +375,12 @@ it.each(titleSurfaces)('badges agent control in the $name and, after takeover, a
   expect(hint(en['badge.agent'])).toBe(en['badge.agentHint'])
   h.update({ ...idle, info: { ...agentInfo, control: 'user', sandboxMode: 'danger-full-access' } })
   title.rerender(chip())
-  expect(title.container.textContent).toBe('bash')
+  expect(title.container.textContent).toBe(`${en.handBack}bash`)
+  fireEvent.click(title.getByRole('button', { name: en.handBack }))
+  expect(h.model.returnControl).toHaveBeenCalledOnce()
+  h.update({ ...idle, info })
+  title.rerender(chip())
+  expect(title.queryByRole('button', { name: en.handBack })).toBeNull()
 })
 
 it.each(titleSurfaces)('renames from the $name pointer target, preserving dragging and isolating editor shortcuts', (surface) => {

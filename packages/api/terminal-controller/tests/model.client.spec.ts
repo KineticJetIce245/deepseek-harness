@@ -53,6 +53,7 @@ function fixture(prepareStream?: <Item>(stream: RemoteStream<Item>) => void, inp
     environment: vi.fn<TerminalRemote['environment']>(async () => success(environment)), list: vi.fn<TerminalRemote['list']>(async () => success([])),
     create: vi.fn<TerminalRemote['create']>(async (_sessionId, request) => success({ ...info, id: request.id })),
     close: vi.fn<TerminalRemote['close']>(async () => success(undefined)), rename: vi.fn<TerminalRemote['rename']>(async () => success(undefined)),
+    returnControl: vi.fn<TerminalRemote['returnControl']>(async () => success(undefined)),
     watch: vi.fn<TerminalRemote['watch']>(streamMethod<TerminalRemote['watch']>(async function* (_session, signal) {
       yield* rosterFrames
       await new Promise<void>((resolve) => {

@@ -784,6 +784,13 @@ describe('Agent terminals', () => {
     }))
   })
 
+  it('refuses to return a terminal the person opened', async () => {
+    const { controller, agent } = fixture()
+    await controller.create(agent, request, signal())
+    expect(() => controller.returnControl(agent, id)).toThrow(expect.objectContaining({ code: 'terminal/unavailable' }))
+    await controller.close(agent, id)
+  })
+
   it.each([
     ['a read-only POSIX shell an empty HISTFILE', 'posix', { mode: 'read-only', workspaceRoot: '/workspace' }, { HISTFILE: '' }],
     ['a confined Windows shell no HISTFILE', 'windows', confined, {}],

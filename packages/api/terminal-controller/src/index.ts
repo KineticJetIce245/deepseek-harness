@@ -8,7 +8,7 @@ import type { SandboxExecutionPolicy } from '@deepseek-ai/dsh-sandbox'
 import type {} from '@deepseek-ai/dsh-sandbox-policy'
 import type {} from '@deepseek-ai/dsh-working-directory'
 import { Remote, RemoteError, TypertRemoteService, type RemoteStream } from '@deepseek-ai/dsh-typert-protocol'
-import { AgentTerminalHandle, type AgentTerminal, type AgentTerminalRequest } from './agent.ts'
+import { AgentTerminalError, AgentTerminalHandle, type AgentTerminal, type AgentTerminalRequest } from './agent.ts'
 import { discoverShells, findShell, resolveShell } from './shells.ts'
 import { BrowserTerminal } from './terminal.ts'
 import { TerminalRetention } from './retention.ts'
@@ -342,6 +342,26 @@ export class TerminalController extends TypertRemoteService {
   rename(agent: Agent, id: WebTerminalId, title: string): void {
     const trimmed = terminalTitle(title)
     this.terminal(agent, id).rename(trimmed)
+  }
+
+  /**
+   * Return input control to the agent of a terminal the person took over.
+   * Only a running terminal the agent opened can be returned; the person's next typed input takes control back.
+   * @param agent - Session owner supplied by the Gateway.
+   * @param id - terminal identity.
+   * @throws RemoteError `terminal/unavailable` for a person-owned terminal, `terminal/control-unavailable` when it is not running.
+   */
+  @Remote
+  returnControl(agent: Agent, id: WebTerminalId): void {
+    try {
+      this.terminal(agent, id).returnControl()
+    } catch (error) {
+      if (error instanceof AgentTerminalError) {
+        if (error.code === 'not-running') throw new RemoteError('terminal/control-unavailable', error.message, { reason: 'not-running' })
+        throw new RemoteError('terminal/unavailable', error.message, {})
+      }
+      throw error
+    }
   }
 
   /**

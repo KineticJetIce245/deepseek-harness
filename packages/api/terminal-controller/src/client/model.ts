@@ -302,6 +302,25 @@ export class TerminalView {
   }
 
   /**
+   * Return input control to the agent after the person took this terminal over.
+   * @returns after the Host confirms and view state reflects agent control.
+   */
+  async returnControl(): Promise<void> {
+    const current = this.state.getSnapshot().info
+    if (current === undefined || current.control === 'agent' || this.lifetime.signal.aborted) return
+    try {
+      valueOf(await this.remote.returnControl(this.sessionId, this.id))
+      if (this.stopped()) return
+      const info = this.state.getSnapshot().info
+      if (info !== undefined) {
+        const returned = { ...info, control: 'agent' as const }
+        this.inventory.update(returned)
+        this.patch({ info: returned })
+      }
+    } catch (error) { this.fail(error) }
+  }
+
+  /**
    * Explicitly terminate this view's process independently of its DOM lifetime.
    * @returns after Host process cleanup succeeds; failures remain retryable by the owner.
    */

@@ -302,6 +302,20 @@ export class BrowserTerminal {
     }
   }
 
+  /**
+   * Return input control to the agent after the person took it over.
+   * Only an agent-owned running terminal can be returned; a person-owned terminal stays theirs.
+   * The person's next typed input takes control back through the ordinary take-over path.
+   * @throws AgentTerminalError `not-running` when the terminal is not running, `unavailable` when the person opened it.
+   */
+  returnControl(): void {
+    if (this.info.origin !== 'agent') throw new AgentTerminalError('unavailable', 'Only a terminal its agent opened can be returned to that agent')
+    if (this.exited || this.closing !== undefined || this.info.state !== 'running') throw new AgentTerminalError('not-running', 'The terminal is not running')
+    if (this.info.control === 'agent') return
+    this.info = { ...this.info, control: 'agent' }
+    this.broadcastState()
+  }
+
   private requireAgentControl(): void {
     if (this.exited || this.closing !== undefined || this.info.state !== 'running') throw new AgentTerminalError('not-running', 'The terminal is not running')
     if (this.info.control !== 'agent') throw new AgentTerminalError('user-control', 'The user has taken over this terminal')

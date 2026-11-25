@@ -16,6 +16,7 @@ export function TerminalTitle({ useTabInfo, useTerminal, view, t }: PropsRuntime
   const { tab } = useTabInfo()
   const title = useTerminal(tab.id, state => state?.info?.title ?? state?.title) ?? tab.title
   const agentControl = useTerminal(tab.id, state => state?.info?.origin === 'agent' && state.info.control === 'agent')
+  const handedOver = useTerminal(tab.id, state => state?.info?.origin === 'agent' && state.info.control === 'user' && state.info.state === 'running')
   const sandboxMode = useTerminal(tab.id, state => state?.info?.origin === 'agent' ? state.info.sandboxMode : undefined)
   const sandboxHint = sandboxMode === 'read-only' ? t('badge.readOnlyHint') : sandboxMode === 'workspace-write' ? t('badge.workspaceWriteHint') : undefined
   const [editing, setEditing] = useState(false)
@@ -48,6 +49,9 @@ export function TerminalTitle({ useTabInfo, useTerminal, view, t }: PropsRuntime
         <Tag tone="info">{t('badge.agent')}</Tag>
       </span>
       : sandboxHint !== undefined && <span className={css.badge} title={sandboxHint}><Tag tone="neutral">{t('badge.sandbox')}</Tag></span>}
+    {handedOver && <button type="button" className={css.handBack} title={t('handBackHint')}
+      onPointerDown={(event) => { event.stopPropagation() }}
+      onClick={(event) => { event.stopPropagation(); void view(tab.id).returnControl() }}>{t('handBack')}</button>}
     {editing ? <input ref={input} className={css.name} defaultValue={title} maxLength={120} aria-label={t('rename')}
       onPointerDown={(event) => { event.stopPropagation() }}
       onClick={(event) => { event.stopPropagation() }}
